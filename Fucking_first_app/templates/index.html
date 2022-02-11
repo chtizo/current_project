@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching Report with Emotion Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <script defer src="/face-api.min.js"></script> -->
+    <script src="//cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/charts.js"></script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+        * {
+        margin: 0;
+        padding: 0;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        }
+
+        html {
+        min-height: 100vh;
+        }
+
+        body {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        height: 100%;
+        background-color: #66c1e5;
+        }
+
+        #chartdiv {
+        width: 95%;
+        height: 500px;
+        background-color: rgba(30, 30, 30, 0.9);
+        border-radius: 6px;
+        overflow: hidden;
+        display: none;
+        -webkit-transform: translate(-1%, 0);
+                transform: translate(-1%, 0);
+        }
+
+        .output {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        }
+
+        .video {
+        position: relative;
+        margin: 30px 0;
+        }
+
+        .video canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        }
+
+        .upload-div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        width: 550px;
+        height: 450px;
+        background-color: transparent;
+        border: 4px dashed white;
+        border-radius: 8px;
+        font-size: 24px;
+        cursor: pointer;
+        -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+                user-select: none;
+        z-index: 5;
+        }
+
+        .upload-div i {
+        color: white;
+        font-size: 150px;
+        pointer-events: none;
+        }
+
+        .upload-div * {
+        pointer-events: none;
+        }
+
+        .upload-div:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .progress-bar {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.1);
+            width: 60%;
+            height: 25px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid white;
+            display: none;
+        }
+
+        .progress-bar.active {
+            display: block;
+        }
+
+        .progress {
+            transition: all 0.1s ease;
+            background-color: rgb(38, 231, 20);
+            width: 10%;
+            height: 100%;
+        }
+
+        .active-view {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chart-buttons {
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .series-button {
+            background-color: transparent;
+            border: 2px solid white;
+            padding: 4px;
+            color: white;
+            margin: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="upload-div">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <br>
+        <div class="active-view">
+            <div class="progress-bar">
+                <div class="progress">
+    
+                </div>
+            </div>
+            <span>Drag & Drop</span>
+            <span>Or</span>
+            <span>Click to Upload</span>
+        </div>
+        <form method="POST" class="post-form" id="upload_form" enctype="multipart/form-data">  
+            {% csrf_token %}  
+            {{ video.as_p }}  
+            <!-- <button type="submit" class="save btn btn-default" hidden>Save</button>   -->
+        </form>
+
+        <form method="POST" class="post-form" id="analyse_form" enctype="multipart/form-data">  
+            {% csrf_token %}  
+            {{ analyse.as_p }}  
+            <!-- <button type="submit" class="save btn btn-default" hidden>Save</button>   -->
+        </form>
+        <!-- <input type="file" name='video' id='vid-input' hidden> -->
+    </div>
+
+    <div class="output">
+        <div class="video">
+            
+        </div>
+        <div id="chartdiv">
+
+        </div>
+        <div class="chart-buttons">
+            <button class="series-all series-button">All</button>
+            <button class="awake series series-button">Awakeness</button>
+            <button class="drowsy series series-button">Drowsiness</button>
+        </div>
+    </div>
+
+    <script>
+        async function chart_it(data) {
+        
+            var chart = am4core.create(
+                document.getElementById("chartdiv"),
+                am4charts.XYChart
+            );
+
+            document.getElementById("chartdiv").querySelector('g[aria-labelledby^=id-]').remove();
+
+            document.getElementById("chartdiv").style.display = 'block';
+
+            chart.zoomOutButton.background.fill = am4core.color("#FFFFFF");
+            chart.zoomOutButton.icon.stroke = am4core.color("#00000088");
+            chart.zoomOutButton.background.states.getKey("hover").properties.fill = am4core.color("#DDDDDD");
+            chart.zoomOutButton.background.states.getKey("down").properties.fill = am4core.color("#BBBBBB");
+
+            var categoryAxis = chart.xAxes.push(new am4charts.DurationAxis());
+            categoryAxis.baseUnit = "second";
+            categoryAxis.dataFields.category = "time";
+            categoryAxis.title.text = "Time";
+            categoryAxis.title.fill = am4core.color("#FFFFFF");
+            categoryAxis.renderer.labels.template.fill = am4core.color("#FFFFFF");
+            categoryAxis.renderer.grid.template.stroke = am4core.color("#FFFFFF");
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.title.text = "Emotions";
+            valueAxis.title.fill = am4core.color("#FFFFFF");
+            valueAxis.renderer.labels.template.fill = am4core.color("#FFFFFF");
+            valueAxis.renderer.grid.template.stroke = am4core.color("#FFFFFF");
+
+            chart.durationFormatter.durationFormat = "hh':'mm':'ss";
+
+            // var series = chart.series.push(new am4charts.LineSeries());
+            // series.name = "Total";
+            // series.stroke = am4core.color("#0000FF");
+            // series.strokeWidth = 3;
+            // series.dataFields.valueY = "total";
+            // series.dataFields.valueX = "current";
+            // series.smoothing = "monotoneX";
+
+            var series = chart.series.push(new am4charts.LineSeries());
+            series.name = "Awake";
+            series.stroke = am4core.color("#0000FF");
+            series.strokeWidth = 3;
+            series.dataFields.valueY = "awake";
+            series.dataFields.valueX = "time";
+            series.smoothing = "monotoneX";
+
+            var series2 = chart.series.push(new am4charts.LineSeries());
+            series2.name = "Drowsy";
+            series2.stroke = am4core.color("#FF0000");
+            series2.strokeWidth = 3;
+            series2.dataFields.valueY = "drowsy";
+            series2.dataFields.valueX = "time";
+            series2.smoothing = "monotoneX";
+
+            chart.cursor= new am4charts.XYCursor();
+
+            chart.mouseWheelBehavior = "zoomX";
+
+            chart.cursor.behavior = "panX";
+
+            chart.cursor.snapOnPan = false;
+
+            series.events.off(
+                "selectionextremeschanged",
+                valueAxis.handleSelectionExtremesChange,
+                valueAxis,
+                false
+            );
+
+            series2.events.off(
+                "selectionextremeschanged",
+                valueAxis.handleSelectionExtremesChange,
+                valueAxis,
+                false
+            );
+
+            var scrollbarX = new am4charts.XYChartScrollbar();
+            scrollbarX.series.push(series);
+            chart.scrollbarX = scrollbarX;
+            chart.scrollbarX.background.fillOpacity = 0;
+            chart.scrollbarX.thumb.background.states.getKey("hover").properties.fill = am4core.color("#FFFFFF66");
+            chart.scrollbarX.thumb.background.states.getKey("down").properties.fill = am4core.color("#FFFFFF88");
+            chart.scrollbarX.unselectedOverlay.fillOpacity = 0;
+
+            chart.scrollbarX.startGrip.background.fill = am4core.color("#FFFFFF");
+            chart.scrollbarX.startGrip.background.states.getKey("hover").properties.fill = am4core.color("#DDDDDD");
+            chart.scrollbarX.startGrip.background.states.getKey("down").properties.fill = am4core.color("#BBBBBB");
+            chart.scrollbarX.startGrip.icon.stroke = am4core.color("#00000088");
+
+            chart.scrollbarX.endGrip.background.fill = am4core.color("#FFFFFF");
+            chart.scrollbarX.endGrip.background.states.getKey("hover").properties.fill = am4core.color("#DDDDDD");
+            chart.scrollbarX.endGrip.background.states.getKey("down").properties.fill = am4core.color("#BBBBBB");
+            chart.scrollbarX.endGrip.icon.stroke = am4core.color("#00000088");
+            
+            var temp_inter = setInterval(check_data, 0);
+
+            function check_data() {
+                if (data[0]) {
+                clearInterval(temp_inter);
+                chart.data = data;
+                }
+            }
+
+            return chart;
+        }
+
+        var upload_div = document.querySelector('.upload-div');
+        var video_input = document.querySelector('#upload_form input[type=file]');
+        var upload_form = document.querySelector('#upload_form');
+        var analyse_form = document.querySelector('#analyse_form');
+        var progress_bar = document.querySelector('.progress-bar');
+        var chart;
+
+        analyse_form.style.display = 'none';
+
+        document.querySelectorAll('label').forEach(label => {
+            label.remove();
+        });
+
+        upload_div.addEventListener('click', upload_click)
+
+        function upload_click() {
+            video_input.click();
+        }
+
+        function analyse_click() {
+            upload(analyse_form, 'download');
+        }
+
+        upload_div.addEventListener('dragover', (e) => {
+            e.preventDefault();
+
+            upload_div.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+
+            var texts = document.querySelector('.upload-div').querySelectorAll('span');
+
+            texts[0].innerText = 'Release to Upload';
+            texts[1].innerText = '';
+            texts[2].innerText = '';
+        })
+
+        upload_div.addEventListener('dragleave', () => {
+        upload_div.style.backgroundColor = 'transparent';
+
+        var texts = upload_div.querySelectorAll('span');
+
+        texts[0].innerText = 'Drag & Drop';
+        texts[1].innerText = 'Or';
+        texts[2].innerText = 'Click to Upload';
+        })
+
+        upload_div.addEventListener('drop', (e) => {
+            e.preventDefault();
+
+            upload_div.style.backgroundColor = 'transparent';
+
+            var texts = upload_div.querySelectorAll('span');
+
+            texts[0].style.display = 'none';
+            texts[1].style.display = 'none';
+            texts[2].style.display = 'none';
+            progress_bar.classList.add('active');
+            progress_bar.querySelector('.progress').style.width = '0%';
+
+            if (e.dataTransfer.files) {
+                video_input.files = e.dataTransfer.files;
+                upload(upload_form, 'upload');
+            }
+        })
+
+        video_input.addEventListener('change', () => {
+            upload(upload_form, 'upload')
+        })
+
+        function set_emotions(temp_obj) {
+            if (temp_obj.awake) {
+                Object.defineProperty(temp_obj, 'drowsy', {value: 0});
+                Object.defineProperty(temp_obj, 'none', {value: 0});
+            } else if (temp_obj.drowsy) {
+                Object.defineProperty(temp_obj, 'awake', {value: 0});
+                Object.defineProperty(temp_obj, 'none', {value: 0});
+            } else if (temp_obj.none) {
+                Object.defineProperty(temp_obj, 'drowsy', {value: 0});
+                Object.defineProperty(temp_obj, 'awake', {value: 0});
+            } else {
+                Object.defineProperty(temp_obj, 'drowsy', {value: 0});
+                Object.defineProperty(temp_obj, 'awake', {value: 0});
+                Object.defineProperty(temp_obj, 'none', {value: 0});
+            }
+            return temp_obj;
+        }
+
+        function upload(form, uord) {
+            var xhr = new XMLHttpRequest();
+            var resstream = [];
+            xhr.open('POST', "/", true);
+            if (uord == 'upload') {
+                upload_div.removeEventListener('click', upload_click);
+                xhr.upload.addEventListener('progress', ({loaded, total}) => {
+                    var fileLoaded = Math.floor((loaded/total) * 100);
+                    progress_bar.querySelector('.progress').style.width = fileLoaded + '%';
+                });
+            } else if (uord == 'download') {
+                upload_div.removeEventListener('click', analyse_click);
+                var restreamtext = '';
+                var first = true;
+                xhr.addEventListener('progress',async (progress) => {
+                    var delta_res = '';
+                    var temp_res = xhr.responseText.substr(restreamtext.length);
+                    var temp_res_arr = temp_res.split('|');
+                    if (temp_res_arr.length > 1) {
+                        temp_res_arr.forEach(async line => {
+                            if (line) {
+                                delta_res = JSON.parse(line);
+                                if (first) {
+                                    chart = await chart_it([delta_res]);
+                                    first = false;
+                                } else {
+                                    chart.addData(delta_res);
+                                }
+                                delta_res['time'] = parseFloat(delta_res.time);
+                                delta_res = set_emotions(delta_res);
+                                upload_div.style.display = 'none';
+                                var texts = upload_div.querySelectorAll('span');
+                                texts[0].innerText = '';
+                                texts[0].style.display = 'none';
+                                // progress_bar.classList.add('active');
+                                // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
+                                // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
+                                console.log(delta_res);
+                            }
+                        })
+                    } else {
+                        delta_res = JSON.parse(temp_res_arr[0]);
+                        if (first) {
+                            chart = await chart_it([delta_res]);
+                            first = false;
+                        } else {
+                            chart.addData(delta_res);
+                        }
+                        delta_res['time'] = parseFloat(delta_res.time);
+                        delta_res = set_emotions(delta_res);
+                        upload_div.style.display = 'none';
+                        var texts = upload_div.querySelectorAll('span');
+                        texts[0].innerText = '';
+                        texts[0].style.display = 'none';
+                        // progress_bar.classList.add('active');
+                        // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
+                        // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
+                        console.log(delta_res);
+                    }
+                    restreamtext += temp_res;
+                    resstream.push(delta_res);
+                })
+            }
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    progress_bar.classList.remove('active');
+                    progress_bar.querySelector('.progress').style.width = '0%';
+
+                    var response = xhr.responseText;
+                    
+                    if (response == 'uploaded') {
+                        var texts = upload_div.querySelectorAll('span');
+                        texts[0].innerText = 'Generate Report';
+                        texts[0].style.display = 'inline';
+                        upload_div.querySelector('i').classList.remove('fa-cloud-upload-alt');
+                        upload_div.querySelector('i').classList.add('fa-chart-area');
+
+                        upload_div.addEventListener('click', analyse_click);
+                    } else {
+                        // var texts = upload_div.querySelectorAll('span');
+                        // texts[0].innerText = 'Done';
+                        // texts[0].style.display = 'inline';
+                        // upload_div.querySelector('i').classList.remove('fa-chart-area');
+                        // upload_div.querySelector('i').classList.add('fa-check-circle');
+                        console.log(resstream);
+                        // upload_div.style.display = 'none';
+                        document.querySelector('#chartdiv').style.display = 'block';
+                        document.querySelector('.chart-buttons').style.display = 'flex';
+
+                        // chart_it(resstream);
+                    }
+                };
+            }
+            var formData = new FormData(form);
+            xhr.send(formData);
+        }
+
+        document.querySelectorAll('.series').forEach(button => {
+            button.addEventListener('click', (e) => {
+                if (chart) {
+                for (var series of chart.series) {
+                    if ((series.name.toLowerCase() == e.target.className.split(' ')[0]) && (series.isHiding || series.isHidden)) {
+                        series.show();
+                    } else if ((series.name.toLowerCase() != e.target.className.split(' ')[0]) && (!series.isHiding || !series.isHidden)) {
+                        series.hide();
+                    }
+                }
+            }
+            })
+        })
+
+        document.querySelector('.series-all').addEventListener('click', () => {
+            if (chart) {
+                for (var series of chart.series) {
+                    if (series.isHidden || series.isHiding) {
+                        series.show();
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>
