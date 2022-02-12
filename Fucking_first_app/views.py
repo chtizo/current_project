@@ -14,7 +14,7 @@ file = ''
 
 
 from contextlib import nullcontext
-from json import JSONEncoder
+import json
 from time import sleep
 from django.shortcuts import render  
 from django.http import HttpResponse  
@@ -25,6 +25,7 @@ from Fucking_first_app.functions import handle_uploaded_file
 from Fucking_first_app.forms import VideoForm  
 from Fucking_first_app.forms import AnalyseConfirm  
 import random
+from django.conf import settings
 
 def index(request):  
     global x
@@ -32,10 +33,10 @@ def index(request):
         global file
         if (request.POST['ins'] == 'upload'):
             
-            handle_uploaded_file(request.FILES['file'])  
+            path = handle_uploaded_file(request.FILES['file'])  
             file = request.FILES['file']._name
             print(file)
-            return HttpResponse('uploaded')  
+            return HttpResponse('uploaded|' + path)  
         elif (request.POST['ins'] == 'analyse'):
             
             # link = 'C:/Users/PAVILION/AppData/Local/Programs/Python/Python37/Fucking_first(2)/Fucking_first/Fucking_first_app/upload/' + file
@@ -47,11 +48,16 @@ def index(request):
         return render(request,"index.html",{'video':video, 'analyse': analyse})  
 
 def iterator():
-    x = 20
+    x = 50
     y = 0
     total = x
     while (x > 0):
         y += 1
         x -= 1
         sleep(0.05)
-        yield '{"current": "' + str(y) + '", "total": "' + str(random.randint(10, 30)) + '"}|'
+        out = {
+            "current": y,
+            "total": total,
+            "value": random.randint(10, 30)
+        }
+        yield json.dumps(out) + '|'

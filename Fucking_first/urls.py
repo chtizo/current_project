@@ -17,11 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+import os
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Enter the app name in following syntax for this to work
     path('', include("Fucking_first_app.urls")),
 ]
+
+urlpatterns += static('/Fucking_first_app/upload/',document_root=os.path.join(settings.BASE_DIR, 'Fucking_first_app', 'upload/'))
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

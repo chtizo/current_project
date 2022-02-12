@@ -72,8 +72,22 @@
         }
 
         .video {
-        position: relative;
-        margin: 30px 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 15px 0 8px 0;
+        }
+
+        .video video {
+            height: 320px;
+        }
+
+        .video .video-name {
+            display: none;
+            margin-top: 10px;
         }
 
         .video canvas {
@@ -154,12 +168,13 @@
         .progress-bar-analyse {
             position: absolute;
             background-color: rgba(0, 0, 0, 0.1);
-            width: 60%;
+            width: 30%;
             height: 25px;
             border-radius: 6px;
             overflow: hidden;
             border: 2px solid white;
             display: none;
+            z-index: 99;
         }
 
         .progress-bar-analyse.active {
@@ -184,16 +199,40 @@
 
         .chart-buttons {
             display: none;
+            pointer-events: none;
+            filter: saturate(60%) opacity(0.7) contrast(0.8) brightness(0.8);
             justify-content: center;
             align-items: center;
+            margin: 0 0 10px 0;
         }
 
         .series-button {
             background-color: transparent;
-            border: 2px solid white;
-            padding: 4px;
-            color: white;
+            border: 2px solid transparent;
+            /* border: none; */
+            border-radius: 4px;
+            background-color: black;
+            padding: 4px 6px;
+            color: rgba(255, 255, 255, 1);
             margin: 5px;
+            cursor: pointer;
+        }
+
+        .series-button:hover {
+            border: 2px solid white;
+        }
+
+        .series-button:active {
+            color: rgba(255, 255, 255, 0.7);
+            border: 2px solid transparent;
+        }
+
+        .awake.series-button {
+            background-color: blue;
+        }
+
+        .drowsy.series-button {
+            background-color: red;
         }
 
     </style>
@@ -229,22 +268,23 @@
     <div class="output">
         <div class="video">
             <div class="progress-bar-analyse">
-                <div class="progress-analyse">
-    
-                </div>
+                <div class="progress-analyse"></div>
             </div>
         </div>
-        <div id="chartdiv">
-
-        </div>
-        <!-- <div class="chart-buttons">
+        
+        <div class="chart-buttons">
             <button class="series-all series-button">All</button>
             <button class="awake series series-button">Awakeness</button>
             <button class="drowsy series series-button">Drowsiness</button>
-        </div> -->
+        </div>
+
+        <div id="chartdiv"></div>
     </div>
 
     <script>
+        var series = [];
+        var valueAxis;
+
         async function chart_it(data) {
         
             var chart = am4core.create(
@@ -264,12 +304,12 @@
             var categoryAxis = chart.xAxes.push(new am4charts.DurationAxis());
             categoryAxis.baseUnit = "second";
             categoryAxis.dataFields.category = "time";
-            categoryAxis.title.text = "Time";
+            categoryAxis.title.text = "Time (HH:MM:SS)";
             categoryAxis.title.fill = am4core.color("#FFFFFF");
             categoryAxis.renderer.labels.template.fill = am4core.color("#FFFFFF");
             categoryAxis.renderer.grid.template.stroke = am4core.color("#FFFFFF");
 
-            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
             valueAxis.title.text = "Emotions";
             valueAxis.title.fill = am4core.color("#FFFFFF");
             valueAxis.renderer.labels.template.fill = am4core.color("#FFFFFF");
@@ -277,21 +317,24 @@
 
             chart.durationFormatter.durationFormat = "hh':'mm':'ss";
 
-            var series = chart.series.push(new am4charts.LineSeries());
-            series.name = "Total";
-            series.stroke = am4core.color("#0000FF");
-            series.strokeWidth = 3;
-            series.dataFields.valueY = "total";
-            series.dataFields.valueX = "current";
-            series.smoothing = "monotoneX";
+            var series1 = chart.series.push(new am4charts.LineSeries());
+            series1.name = "Value";
+            series1.stroke = am4core.color("blue");
+            series1.strokeWidth = 3;
+            series1.dataFields.valueY = "value";
+            series1.dataFields.valueX = "current";
+            series1.smoothing = "monotoneX";
 
-            // var series = chart.series.push(new am4charts.LineSeries());
-            // series.name = "Awake";
-            // series.stroke = am4core.color("#0000FF");
-            // series.strokeWidth = 3;
-            // series.dataFields.valueY = "awake";
-            // series.dataFields.valueX = "time";
-            // series.smoothing = "monotoneX";
+            series.push(series1)
+
+            // var series1 = chart.series.push(new am4charts.LineSeries());
+            // series1.name = "Awake";
+            // series1.stroke = am4core.color("#0000FF");
+            // series1.strokeWidth = 3;
+            // series1.dataFields.valueY = "awake";
+            // series1.dataFields.valueX = "time";
+            // series1.smoothing = "monotoneX";
+            // series.push(series1)
 
             // var series2 = chart.series.push(new am4charts.LineSeries());
             // series2.name = "Drowsy";
@@ -300,6 +343,7 @@
             // series2.dataFields.valueY = "drowsy";
             // series2.dataFields.valueX = "time";
             // series2.smoothing = "monotoneX";
+            // series.push(series2)
 
             chart.cursor= new am4charts.XYCursor();
 
@@ -309,12 +353,12 @@
 
             chart.cursor.snapOnPan = false;
 
-            series.events.off(
-                "selectionextremeschanged",
-                valueAxis.handleSelectionExtremesChange,
-                valueAxis,
-                false
-            );
+            // series1.events.off(
+            //     "selectionextremeschanged",
+            //     valueAxis.handleSelectionExtremesChange,
+            //     valueAxis,
+            //     false
+            // );
 
             // series2.events.off(
             //     "selectionextremeschanged",
@@ -324,7 +368,7 @@
             // );
 
             var scrollbarX = new am4charts.XYChartScrollbar();
-            scrollbarX.series.push(series);
+            scrollbarX.series.push(series1);
             chart.scrollbarX = scrollbarX;
             chart.scrollbarX.background.fillOpacity = 0;
             chart.scrollbarX.thumb.background.states.getKey("hover").properties.fill = am4core.color("#FFFFFF66");
@@ -419,7 +463,19 @@
         })
 
         video_input.addEventListener('change', () => {
-            upload(upload_form, 'upload')
+            upload_div.style.backgroundColor = 'transparent';
+
+            var texts = upload_div.querySelectorAll('span');
+
+            texts[0].style.display = 'none';
+            texts[1].style.display = 'none';
+            texts[2].style.display = 'none';
+            progress_bar.classList.add('active');
+            progress_bar.querySelector('.progress').style.width = '0%';
+
+            if (video_input.files) {
+                upload(upload_form, 'upload');
+            }
         })
 
         function set_emotions(temp_obj) {
@@ -465,15 +521,18 @@
                             if (line) {
                                 delta_res = JSON.parse(line);
                                 if (first) {
-                                    chart = await chart_it([delta_res]);
                                     upload_div.style.display = 'none';
+                                    document.querySelector('.video').querySelector('video').style.display = 'block';
+                                    document.querySelector('.video').querySelector('.video-name').style.display = 'block';
+                                    document.querySelector('.chart-buttons').style.display = 'flex';
+                                    chart = await chart_it([delta_res]);
                                     var texts = upload_div.querySelectorAll('span');
                                     texts[0].innerText = '';
                                     texts[0].style.display = 'none';
                                     progress_bar_analyse.classList.add('active');
                                     first = false;
                                 } else {
-                                    chart.addData(delta_res);
+                                    await chart.addData(delta_res);
                                 }
                                 // delta_res['time'] = parseFloat(delta_res.time);
                                 // delta_res = set_emotions(delta_res);
@@ -483,22 +542,25 @@
                                 // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
 
                                 // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
-                                progress_bar_analyse.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
+                                progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
                                 console.log(delta_res);
                             }
                         })
                     } else {
                         delta_res = JSON.parse(temp_res_arr[0]);
                         if (first) {
-                            chart = await chart_it([delta_res]);
                             upload_div.style.display = 'none';
+                            document.querySelector('.video').querySelector('video').style.display = 'block';
+                            document.querySelector('.video').querySelector('.video-name').style.display = 'block';
+                            document.querySelector('.chart-buttons').style.display = 'flex';
+                            chart = await chart_it([delta_res]);
                             var texts = upload_div.querySelectorAll('span');
                             texts[0].innerText = '';
                             texts[0].style.display = 'none';
                             progress_bar_analyse.classList.add('active');
                             first = false;
                         } else {
-                            chart.addData(delta_res);
+                            await chart.addData(delta_res);
                         }
                         // delta_res['time'] = parseFloat(delta_res.time);
                         // delta_res = set_emotions(delta_res);
@@ -508,7 +570,7 @@
                         // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
 
                         // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
-                        progress_bar_analyse.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
+                        progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
                         console.log(delta_res);
                     }
                     restreamtext += temp_res;
@@ -522,7 +584,16 @@
 
                     var response = xhr.responseText;
                     
-                    if (response == 'uploaded') {
+                    if (response.split('|')[0] == 'uploaded') {
+                        var video = document.createElement('video');
+                        var video_name = document.createElement('div');
+                        video_name.classList.add('video-name');
+                        video.style.display = 'none';
+                        video.src = response.split('|')[1];
+                        video_name.innerHTML = response.split('|')[1].split('/').reverse()[0];
+                        video.style.filter = 'blur(3px)';
+                        document.querySelector('.video').append(video);
+                        document.querySelector('.video').append(video_name);
                         var texts = upload_div.querySelectorAll('span');
                         texts[0].innerText = 'Generate Report';
                         texts[0].style.display = 'inline';
@@ -536,10 +607,25 @@
                         // texts[0].style.display = 'inline';
                         // upload_div.querySelector('i').classList.remove('fa-chart-area');
                         // upload_div.querySelector('i').classList.add('fa-check-circle');
-                        console.log(resstream);
+                        // console.log(resstream);
                         // upload_div.style.display = 'none';
-                        document.querySelector('#chartdiv').style.display = 'block';
-                        document.querySelector('.chart-buttons').style.display = 'flex';
+                        progress_bar_analyse.classList.remove('active');
+                        progress_bar_analyse.querySelector('.progress-analyse').style.width = '0%';
+                        document.querySelector('.video').querySelector('video').style.filter = 'none';
+                        document.querySelector('.video').querySelector('video').controls = true;
+                        document.querySelector('.video').querySelector('video').focus();
+                        first = true;
+                        series.forEach(serie => {
+                            serie.events.off(
+                                "selectionextremeschanged",
+                                valueAxis.handleSelectionExtremesChange,
+                                valueAxis,
+                                false
+                            );
+                        })
+                        // document.querySelector('#chartdiv').style.display = 'block';
+                        document.querySelector('.chart-buttons').style.pointerEvents = 'all';
+                        document.querySelector('.chart-buttons').style.filter = 'none';
 
                         // chart_it(resstream);
                     }
@@ -548,6 +634,19 @@
             var formData = new FormData(form);
             xhr.send(formData);
         }
+
+        document.querySelector('body').addEventListener('keyup', (e) => {
+            if (e.keyCode == 32 && document.querySelector('.video').querySelector('video')?.style.display != 'none') {
+                e.preventDefault();
+                if (document.querySelector('.video').querySelector('video') != document.activeElement) {
+                    if (document.querySelector('.video').querySelector('video').paused) {
+                        document.querySelector('.video').querySelector('video').play();
+                    } else {
+                        document.querySelector('.video').querySelector('video').pause();
+                    }
+                }
+            }
+        })
 
         // document.querySelectorAll('.series').forEach(button => {
         //     button.addEventListener('click', (e) => {
