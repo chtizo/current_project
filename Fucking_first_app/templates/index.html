@@ -744,29 +744,29 @@
             }
         })
 
-        // document.querySelectorAll('.series').forEach(button => {
-        //     button.addEventListener('click', (e) => {
-        //         if (chart) {
-        //         for (var series of chart.series) {
-        //             if ((series.name.toLowerCase() == e.target.className.split(' ')[0]) && (series.isHiding || series.isHidden)) {
-        //                 series.show();
-        //             } else if ((series.name.toLowerCase() != e.target.className.split(' ')[0]) && (!series.isHiding || !series.isHidden)) {
-        //                 series.hide();
-        //             }
-        //         }
-        //     }
-        //     })
-        // })
+        document.querySelectorAll('.series').forEach(button => {
+            button.addEventListener('click', (e) => {
+                if (chart) {
+                for (var series of chart.series) {
+                    if ((series.name.toLowerCase() == e.target.className.split(' ')[0]) && (series.isHiding || series.isHidden)) {
+                        series.show();
+                    } else if ((series.name.toLowerCase() != e.target.className.split(' ')[0]) && (!series.isHiding || !series.isHidden)) {
+                        series.hide();
+                    }
+                }
+            }
+            })
+        })
 
-        // document.querySelector('.series-all').addEventListener('click', () => {
-        //     if (chart) {
-        //         for (var series of chart.series) {
-        //             if (series.isHidden || series.isHiding) {
-        //                 series.show();
-        //             }
-        //         }
-        //     }
-        // })
+        document.querySelector('.series-all').addEventListener('click', () => {
+            if (chart) {
+                for (var series of chart.series) {
+                    if (series.isHidden || series.isHiding) {
+                        series.show();
+                    }
+                }
+            }
+        })
     </script>
 </body>
 </html>
