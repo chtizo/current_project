@@ -319,63 +319,31 @@
 
             // ------------------------------------------------------------------------------------
 
-            var series1 = chart.series.push(new am4charts.LineSeries());
-            series1.name = "Value";
-            series1.stroke = am4core.color("blue");
-            series1.strokeWidth = 3;
-            series1.dataFields.valueY = "value";
-            series1.dataFields.valueX = "current";
-            series1.smoothing = "monotoneX";
-            series.push(series1)
-
-            var bullet1 = series1.bullets.push(new am4charts.CircleBullet());
-            // var labelBullet1 = series1.bullets.push(new am4charts.LabelBullet());
-            var hoverbullet1 = series1.bullets.push(new am4charts.CircleBullet());
-
-            // labelBullet1.label.text = "{value}";
-            // labelBullet1.label.dy = 1;
-            // labelBullet1.label.fill = am4core.color("white");
-
-            hoverbullet1.fillOpacity = 0;
-            hoverbullet1.strokeOpacity = 0;
-
-            bullet1.scale = 0.7;
-            // labelBullet1.scale = 0.8;
-            hoverbullet1.scale = 4;
-
-            // bullet1.fill = am4core.color("skyblue");
-
-            // bullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
-            // labelBullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
-            hoverbullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
-
-            // ------------------------------------------------------------------------------------
-
             // var series1 = chart.series.push(new am4charts.LineSeries());
-            // series1.name = "Awake";
-            // series1.stroke = am4core.color("#0000FF");
+            // series1.name = "Value";
+            // series1.stroke = am4core.color("blue");
             // series1.strokeWidth = 3;
-            // series1.dataFields.valueY = "awake";
-            // series1.dataFields.valueX = "time";
+            // series1.dataFields.valueY = "value";
+            // series1.dataFields.valueX = "current";
             // series1.smoothing = "monotoneX";
             // series.push(series1)
 
             // var bullet1 = series1.bullets.push(new am4charts.CircleBullet());
-            // var labelBullet1 = series1.bullets.push(new am4charts.LabelBullet());
+            // // var labelBullet1 = series1.bullets.push(new am4charts.LabelBullet());
             // var hoverbullet1 = series1.bullets.push(new am4charts.CircleBullet());
 
-            // labelBullet1.label.text = "{value}";
-            // labelBullet1.label.dy = 1;
-            // labelBullet1.label.fill = am4core.color("white");
+            // // labelBullet1.label.text = "{value}";
+            // // labelBullet1.label.dy = 1;
+            // // labelBullet1.label.fill = am4core.color("white");
 
             // hoverbullet1.fillOpacity = 0;
             // hoverbullet1.strokeOpacity = 0;
 
-            // bullet1.scale = 2.2;
-            // labelBullet1.scale = 0.8;
+            // bullet1.scale = 0.7;
+            // // labelBullet1.scale = 0.8;
             // hoverbullet1.scale = 4;
 
-            // bullet1.fill = am4core.color("blue");
+            // // bullet1.fill = am4core.color("skyblue");
 
             // // bullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
             // // labelBullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
@@ -383,35 +351,67 @@
 
             // ------------------------------------------------------------------------------------
 
-            // var series2 = chart.series.push(new am4charts.LineSeries());
-            // series2.name = "Drowsy";
-            // series2.stroke = am4core.color("#FF0000");
-            // series2.strokeWidth = 3;
-            // series2.dataFields.valueY = "drowsy";
-            // series2.dataFields.valueX = "time";
-            // series2.smoothing = "monotoneX";
-            // series.push(series2)
+            var series1 = chart.series.push(new am4charts.LineSeries());
+            series1.name = "Awake";
+            series1.stroke = am4core.color("#0000FF");
+            series1.strokeWidth = 3;
+            series1.dataFields.valueY = "awake";
+            series1.dataFields.valueX = "time";
+            series1.smoothing = "monotoneX";
+            series.push(series1)
 
-            // var bullet2 = series2.bullets.push(new am4charts.CircleBullet());
-            // var labelBullet2 = series2.bullets.push(new am4charts.LabelBullet());
-            // var hoverbullet2 = series2.bullets.push(new am4charts.CircleBullet());
+            var bullet1 = series1.bullets.push(new am4charts.CircleBullet());
+            var labelBullet1 = series1.bullets.push(new am4charts.LabelBullet());
+            var hoverbullet1 = series1.bullets.push(new am4charts.CircleBullet());
 
-            // labelBullet2.label.text = "{value}";
-            // labelBullet2.label.dy = 1;
-            // labelBullet2.label.fill = am4core.color("white");
+            labelBullet1.label.text = "{value}";
+            labelBullet1.label.dy = 1;
+            labelBullet1.label.fill = am4core.color("white");
 
-            // hoverbullet2.fillOpacity = 0;
-            // hoverbullet2.strokeOpacity = 0;
+            hoverbullet1.fillOpacity = 0;
+            hoverbullet1.strokeOpacity = 0;
 
-            // bullet2.scale = 2.2;
-            // labelBullet2.scale = 0.8;
-            // hoverbullet2.scale = 4;
+            bullet1.scale = 2.2;
+            labelBullet1.scale = 0.8;
+            hoverbullet1.scale = 4;
 
-            // bullet2.fill = am4core.color("blue");
+            bullet1.fill = am4core.color("blue");
 
-            // // bullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
-            // // labelBullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
-            // hoverbullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
+            // bullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
+            // labelBullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
+            hoverbullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
+
+            // ------------------------------------------------------------------------------------
+
+            var series2 = chart.series.push(new am4charts.LineSeries());
+            series2.name = "Drowsy";
+            series2.stroke = am4core.color("#FF0000");
+            series2.strokeWidth = 3;
+            series2.dataFields.valueY = "drowsy";
+            series2.dataFields.valueX = "time";
+            series2.smoothing = "monotoneX";
+            series.push(series2)
+
+            var bullet2 = series2.bullets.push(new am4charts.CircleBullet());
+            var labelBullet2 = series2.bullets.push(new am4charts.LabelBullet());
+            var hoverbullet2 = series2.bullets.push(new am4charts.CircleBullet());
+
+            labelBullet2.label.text = "{value}";
+            labelBullet2.label.dy = 1;
+            labelBullet2.label.fill = am4core.color("white");
+
+            hoverbullet2.fillOpacity = 0;
+            hoverbullet2.strokeOpacity = 0;
+
+            bullet2.scale = 2.2;
+            labelBullet2.scale = 0.8;
+            hoverbullet2.scale = 4;
+
+            bullet2.fill = am4core.color("blue");
+
+            // bullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
+            // labelBullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
+            hoverbullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
 
             // ------------------------------------------------------------------------------------
 
@@ -630,15 +630,15 @@
                                 } else {
                                     await chart.addData(delta_res);
                                 }
-                                // delta_res['time'] = parseFloat(delta_res.time);
-                                // delta_res = set_emotions(delta_res);
+                                delta_res['time'] = parseFloat(delta_res.time);
+                                delta_res = set_emotions(delta_res);
 
                                 // progress_bar.classList.add('active');
                                 // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
                                 // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
 
-                                // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
-                                progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
+                                progress_bar_analyse.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
+                                // progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
                                 console.log(delta_res);
                             }
                         })
@@ -658,15 +658,15 @@
                         } else {
                             await chart.addData(delta_res);
                         }
-                        // delta_res['time'] = parseFloat(delta_res.time);
-                        // delta_res = set_emotions(delta_res);
+                        delta_res['time'] = parseFloat(delta_res.time);
+                        delta_res = set_emotions(delta_res);
 
                         // progress_bar.classList.add('active');
                         // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
                         // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
 
-                        // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
-                        progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
+                        progress_bar_analyse.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
+                        // progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
                         console.log(delta_res);
                     }
                     restreamtext += temp_res;

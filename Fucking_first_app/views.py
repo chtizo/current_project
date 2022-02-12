@@ -8,9 +8,9 @@
 # # Create your views here.
 
 file = ''
-# from importlib.machinery import SourceFileLoader
-# location = "C:/Users/PAVILION/AppData/Local/Programs/Python/Python37/Drowsiness_detect/yolov5/"
-# detect = SourceFileLoader("Detect_uploaded_video",location + "Detect_uploaded_video.py").load_module()
+from importlib.machinery import SourceFileLoader
+location = "C:/Users/PAVILION/AppData/Local/Programs/Python/Python37/Drowsiness_detect/yolov5/"
+detect = SourceFileLoader("Detect_uploaded_video",location + "Detect_uploaded_video.py").load_module()
 
 
 from contextlib import nullcontext
@@ -39,9 +39,9 @@ def index(request):
             return HttpResponse('uploaded|' + path)  
         elif (request.POST['ins'] == 'analyse'):
             
-            # link = 'C:/Users/PAVILION/AppData/Local/Programs/Python/Python37/Fucking_first(2)/Fucking_first/Fucking_first_app/upload/' + file
-            # return StreamingHttpResponse(detect.detection(link, location))
-            return StreamingHttpResponse(iterator())
+            link = 'C:/Users/PAVILION/AppData/Local/Programs/Python/Python37/Fucking_first(2)/Fucking_first/Fucking_first_app/upload/' + file
+            return StreamingHttpResponse(detect.detection(link, location))
+            # return StreamingHttpResponse(iterator())
     else:  
         video = VideoForm()  
         analyse = AnalyseConfirm()
