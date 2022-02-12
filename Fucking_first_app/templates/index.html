@@ -262,6 +262,12 @@
             {{ analyse.as_p }}  
             <!-- <button type="submit" class="save btn btn-default" hidden>Save</button>   -->
         </form>
+
+        <form method="POST" class="post-form" id="complete_form" enctype="multipart/form-data">  
+            {% csrf_token %}  
+            {{ complete.as_p }}  
+            <!-- <button type="submit" class="save btn btn-default" hidden>Save</button>   -->
+        </form>
         <!-- <input type="file" name='video' id='vid-input' hidden> -->
     </div>
 
@@ -467,9 +473,11 @@
         var video_input = document.querySelector('#upload_form input[type=file]');
         var upload_form = document.querySelector('#upload_form');
         var analyse_form = document.querySelector('#analyse_form');
+        var complete_form = document.querySelector('#complete_form');
         var progress_bar = document.querySelector('.progress-bar');
         var progress_bar_analyse = document.querySelector('.progress-bar-analyse');
         var chart;
+        var completed = false;
 
         analyse_form.style.display = 'none';
 
@@ -643,6 +651,7 @@
                     resstream.push(delta_res);
                 })
             }
+
             xhr.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     progress_bar.classList.remove('active');
@@ -668,32 +677,36 @@
 
                         upload_div.addEventListener('click', analyse_click);
                     } else {
-                        // var texts = upload_div.querySelectorAll('span');
-                        // texts[0].innerText = 'Done';
-                        // texts[0].style.display = 'inline';
-                        // upload_div.querySelector('i').classList.remove('fa-chart-area');
-                        // upload_div.querySelector('i').classList.add('fa-check-circle');
-                        // console.log(resstream);
-                        // upload_div.style.display = 'none';
-                        progress_bar_analyse.classList.remove('active');
-                        progress_bar_analyse.querySelector('.progress-analyse').style.width = '0%';
-                        document.querySelector('.video').querySelector('video').style.filter = 'none';
-                        document.querySelector('.video').querySelector('video').controls = true;
-                        document.querySelector('.video').querySelector('video').focus();
-                        first = true;
-                        series.forEach(serie => {
-                            serie.events.off(
-                                "selectionextremeschanged",
-                                valueAxis.handleSelectionExtremesChange,
-                                valueAxis,
-                                false
-                            );
-                        })
-                        // document.querySelector('#chartdiv').style.display = 'block';
-                        document.querySelector('.chart-buttons').style.pointerEvents = 'all';
-                        document.querySelector('.chart-buttons').style.filter = 'none';
+                        if (!completed) {
+                            // var texts = upload_div.querySelectorAll('span');
+                            // texts[0].innerText = 'Done';
+                            // texts[0].style.display = 'inline';
+                            // upload_div.querySelector('i').classList.remove('fa-chart-area');
+                            // upload_div.querySelector('i').classList.add('fa-check-circle');
+                            // console.log(resstream);
+                            // upload_div.style.display = 'none';
+                            progress_bar_analyse.classList.remove('active');
+                            progress_bar_analyse.querySelector('.progress-analyse').style.width = '0%';
+                            document.querySelector('.video').querySelector('video').style.filter = 'none';
+                            document.querySelector('.video').querySelector('video').controls = true;
+                            document.querySelector('.video').querySelector('video').focus();
+                            first = true;
+                            series.forEach(serie => {
+                                serie.events.off(
+                                    "selectionextremeschanged",
+                                    valueAxis.handleSelectionExtremesChange,
+                                    valueAxis,
+                                    false
+                                );
+                            })
+                            // document.querySelector('#chartdiv').style.display = 'block';
+                            document.querySelector('.chart-buttons').style.pointerEvents = 'all';
+                            document.querySelector('.chart-buttons').style.filter = 'none';
+                            upload(complete_form, 'complete');
 
-                        // chart_it(resstream);
+                            // chart_it(resstream);
+                            completed = true;
+                        }
                     }
                 };
             }

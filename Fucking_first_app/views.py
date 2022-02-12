@@ -24,8 +24,10 @@ from torch import rand
 from Fucking_first_app.functions import handle_uploaded_file  
 from Fucking_first_app.forms import VideoForm  
 from Fucking_first_app.forms import AnalyseConfirm  
+from Fucking_first_app.forms import AnalyseComplete  
 import random
 from django.conf import settings
+import os
 
 def index(request):  
     global x
@@ -42,10 +44,15 @@ def index(request):
             link = 'C:/Users/PAVILION/AppData/Local/Programs/Python/Python37/Fucking_first(2)/Fucking_first/Fucking_first_app/upload/' + file
             return StreamingHttpResponse(detect.detection(link, location))
             # return StreamingHttpResponse(iterator())
+        elif (request.POST['ins'] == 'complete'):
+            os.system("python manage.py runserver")
+            print("Restarting...")
+            exit()
     else:  
         video = VideoForm()  
         analyse = AnalyseConfirm()
-        return render(request,"index.html",{'video':video, 'analyse': analyse})  
+        complete = AnalyseComplete()
+        return render(request,"index.html",{'video':video, 'analyse': analyse, 'complete': complete})  
 
 def iterator():
     x = 50
