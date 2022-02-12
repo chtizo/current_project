@@ -342,7 +342,7 @@
             // ------------------------------------------------------------------------------------
 
             var series1 = chart.series.push(new am4charts.LineSeries());
-            series1.name = "Awakeness";
+            series1.name = "Awake";
             series1.stroke = am4core.color("blue");
             series1.strokeWidth = 3;
             series1.dataFields.valueY = "awake";
@@ -364,7 +364,7 @@
             // ------------------------------------------------------------------------------------
 
             var series2 = chart.series.push(new am4charts.LineSeries());
-            series2.name = "Drowsiness";
+            series2.name = "Drowsy";
             series2.stroke = am4core.color("red");
             series2.strokeWidth = 3;
             series2.dataFields.valueY = "drowsy";
@@ -607,7 +607,7 @@
                                 // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
                                 // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
 
-                                progress_bar_analyse.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
+                                progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
                                 // progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
                                 console.log(delta_res);
                             }
@@ -635,7 +635,7 @@
                         // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
                         // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
 
-                        progress_bar_analyse.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
+                        progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
                         // progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
                         console.log(delta_res);
                     }
