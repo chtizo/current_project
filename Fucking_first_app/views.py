@@ -24,7 +24,6 @@ from torch import rand
 from Fucking_first_app.functions import handle_uploaded_file  
 from Fucking_first_app.forms import VideoForm  
 from Fucking_first_app.forms import AnalyseConfirm  
-from Fucking_first_app.forms import AnalyseComplete  
 import random
 from django.conf import settings
 import os
