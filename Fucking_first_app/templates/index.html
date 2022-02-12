@@ -472,6 +472,8 @@
         var progress_bar_analyse = document.querySelector('.progress-bar-analyse');
         var chart;
 
+        document.querySelector('html').style.zoom = (1920/window.innerWidth)*100 + "%";
+
         analyse_form.style.display = 'none';
 
         document.querySelectorAll('label').forEach(label => {
