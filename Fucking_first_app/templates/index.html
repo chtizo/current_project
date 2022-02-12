@@ -301,21 +301,23 @@
             chart.zoomOutButton.background.states.getKey("hover").properties.fill = am4core.color("#DDDDDD");
             chart.zoomOutButton.background.states.getKey("down").properties.fill = am4core.color("#BBBBBB");
 
-            var categoryAxis = chart.xAxes.push(new am4charts.DurationAxis());
-            categoryAxis.baseUnit = "second";
-            categoryAxis.dataFields.category = "time";
-            categoryAxis.title.text = "Time (HH:MM:SS)";
-            categoryAxis.title.fill = am4core.color("#FFFFFF");
-            categoryAxis.renderer.labels.template.fill = am4core.color("#FFFFFF");
-            categoryAxis.renderer.grid.template.stroke = am4core.color("#FFFFFF");
+            var durationAxis = chart.xAxes.push(new am4charts.DurationAxis());
+            durationAxis.baseUnit = "second";
+            durationAxis.dataFields.category = "time";
+            durationAxis.title.text = "Time (HH:MM:SS)";
+            durationAxis.title.fill = am4core.color("#FFFFFF");
+            durationAxis.renderer.labels.template.fill = am4core.color("#FFFFFF");
+            durationAxis.renderer.grid.template.stroke = am4core.color("#FFFFFF");
 
             valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-            valueAxis.title.text = "Emotions";
+            valueAxis.title.text = "Emotions (%)";
             valueAxis.title.fill = am4core.color("#FFFFFF");
             valueAxis.renderer.labels.template.fill = am4core.color("#FFFFFF");
             valueAxis.renderer.grid.template.stroke = am4core.color("#FFFFFF");
 
             chart.durationFormatter.durationFormat = "hh':'mm':'ss";
+
+            // ------------------------------------------------------------------------------------
 
             var series1 = chart.series.push(new am4charts.LineSeries());
             series1.name = "Value";
@@ -324,8 +326,30 @@
             series1.dataFields.valueY = "value";
             series1.dataFields.valueX = "current";
             series1.smoothing = "monotoneX";
-
             series.push(series1)
+
+            var bullet1 = series1.bullets.push(new am4charts.CircleBullet());
+            // var labelBullet1 = series1.bullets.push(new am4charts.LabelBullet());
+            var hoverbullet1 = series1.bullets.push(new am4charts.CircleBullet());
+
+            // labelBullet1.label.text = "{value}";
+            // labelBullet1.label.dy = 1;
+            // labelBullet1.label.fill = am4core.color("white");
+
+            hoverbullet1.fillOpacity = 0;
+            hoverbullet1.strokeOpacity = 0;
+
+            bullet1.scale = 0.7;
+            // labelBullet1.scale = 0.8;
+            hoverbullet1.scale = 4;
+
+            // bullet1.fill = am4core.color("skyblue");
+
+            // bullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
+            // labelBullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
+            hoverbullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
+
+            // ------------------------------------------------------------------------------------
 
             // var series1 = chart.series.push(new am4charts.LineSeries());
             // series1.name = "Awake";
@@ -336,6 +360,29 @@
             // series1.smoothing = "monotoneX";
             // series.push(series1)
 
+            // var bullet1 = series1.bullets.push(new am4charts.CircleBullet());
+            // var labelBullet1 = series1.bullets.push(new am4charts.LabelBullet());
+            // var hoverbullet1 = series1.bullets.push(new am4charts.CircleBullet());
+
+            // labelBullet1.label.text = "{value}";
+            // labelBullet1.label.dy = 1;
+            // labelBullet1.label.fill = am4core.color("white");
+
+            // hoverbullet1.fillOpacity = 0;
+            // hoverbullet1.strokeOpacity = 0;
+
+            // bullet1.scale = 2.2;
+            // labelBullet1.scale = 0.8;
+            // hoverbullet1.scale = 4;
+
+            // bullet1.fill = am4core.color("blue");
+
+            // // bullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
+            // // labelBullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
+            // hoverbullet1.tooltipText = "{name}: [bold]{valueY}%[/]";
+
+            // ------------------------------------------------------------------------------------
+
             // var series2 = chart.series.push(new am4charts.LineSeries());
             // series2.name = "Drowsy";
             // series2.stroke = am4core.color("#FF0000");
@@ -345,13 +392,38 @@
             // series2.smoothing = "monotoneX";
             // series.push(series2)
 
-            chart.cursor= new am4charts.XYCursor();
+            // var bullet2 = series2.bullets.push(new am4charts.CircleBullet());
+            // var labelBullet2 = series2.bullets.push(new am4charts.LabelBullet());
+            // var hoverbullet2 = series2.bullets.push(new am4charts.CircleBullet());
+
+            // labelBullet2.label.text = "{value}";
+            // labelBullet2.label.dy = 1;
+            // labelBullet2.label.fill = am4core.color("white");
+
+            // hoverbullet2.fillOpacity = 0;
+            // hoverbullet2.strokeOpacity = 0;
+
+            // bullet2.scale = 2.2;
+            // labelBullet2.scale = 0.8;
+            // hoverbullet2.scale = 4;
+
+            // bullet2.fill = am4core.color("blue");
+
+            // // bullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
+            // // labelBullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
+            // hoverbullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
+
+            // ------------------------------------------------------------------------------------
+
+            chart.cursor = new am4charts.XYCursor();
 
             chart.mouseWheelBehavior = "zoomX";
 
             chart.cursor.behavior = "panX";
 
             chart.cursor.snapOnPan = false;
+
+            // chart.cursor.snapToSeries = [series1];
 
             // series1.events.off(
             //     "selectionextremeschanged",
@@ -370,20 +442,44 @@
             var scrollbarX = new am4charts.XYChartScrollbar();
             scrollbarX.series.push(series1);
             chart.scrollbarX = scrollbarX;
+
+            chart.scrollbarX.minHeight = 60;
+
             chart.scrollbarX.background.fillOpacity = 0;
             chart.scrollbarX.thumb.background.states.getKey("hover").properties.fill = am4core.color("#FFFFFF66");
             chart.scrollbarX.thumb.background.states.getKey("down").properties.fill = am4core.color("#FFFFFF88");
             chart.scrollbarX.unselectedOverlay.fillOpacity = 0;
 
-            chart.scrollbarX.startGrip.background.fill = am4core.color("#FFFFFF");
-            chart.scrollbarX.startGrip.background.states.getKey("hover").properties.fill = am4core.color("#DDDDDD");
-            chart.scrollbarX.startGrip.background.states.getKey("down").properties.fill = am4core.color("#BBBBBB");
-            chart.scrollbarX.startGrip.icon.stroke = am4core.color("#00000088");
+            // chart.scrollbarX.startGrip.background.fill = am4core.color("#FFFFFF");
+            // chart.scrollbarX.startGrip.background.states.getKey("hover").properties.fill = am4core.color("#DDDDDD");
+            // chart.scrollbarX.startGrip.background.states.getKey("down").properties.fill = am4core.color("#BBBBBB");
+            // chart.scrollbarX.startGrip.icon.stroke = am4core.color("#00000088");
 
-            chart.scrollbarX.endGrip.background.fill = am4core.color("#FFFFFF");
-            chart.scrollbarX.endGrip.background.states.getKey("hover").properties.fill = am4core.color("#DDDDDD");
-            chart.scrollbarX.endGrip.background.states.getKey("down").properties.fill = am4core.color("#BBBBBB");
-            chart.scrollbarX.endGrip.icon.stroke = am4core.color("#00000088");
+            // chart.scrollbarX.endGrip.background.fill = am4core.color("#FFFFFF");
+            // chart.scrollbarX.endGrip.background.states.getKey("hover").properties.fill = am4core.color("#DDDDDD");
+            // chart.scrollbarX.endGrip.background.states.getKey("down").properties.fill = am4core.color("#BBBBBB");
+            // chart.scrollbarX.endGrip.icon.stroke = am4core.color("#00000088");
+
+            chart.scrollbarX.startGrip.background.disabled = true;
+            chart.scrollbarX.endGrip.background.disabled = true;
+
+            var startg = chart.scrollbarX.startGrip.createChild(am4core.Rectangle)
+            startg.width = 10;
+            startg.height = 62;
+            startg.fill = am4core.color("#FFF");
+            startg.align = "center";
+            startg.valign = "middle";
+
+            var endg = chart.scrollbarX.endGrip.createChild(am4core.Rectangle)
+            endg.width = 10;
+            endg.height = 62;
+            endg.fill = am4core.color("#FFF");
+            endg.align = "center";
+            endg.valign = "middle";
+
+            chart.scrollbarX.startGrip.icon.disabled = true;
+            chart.scrollbarX.endGrip.icon.disabled = true;
+
             
             var temp_inter = setInterval(check_data, 0);
 
