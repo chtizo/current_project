@@ -9,8 +9,3 @@ class AnalyseConfirm(forms.Form):
     ins = forms.CharField()
     ins.widget.attrs.update({'name': 'ins', 'value': 'analyse', 'hidden': 'true'})
     test = forms.CharField() 
-
-class AnalyseComplete(forms.Form):
-    ins = forms.CharField()
-    ins.widget.attrs.update({'name': 'ins', 'value': 'complete', 'hidden': 'true'})
-    test = forms.CharField() 

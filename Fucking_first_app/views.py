@@ -44,15 +44,10 @@ def index(request):
             link = 'C:/Users/PAVILION/AppData/Local/Programs/Python/Python37/Fucking_first(2)/Fucking_first/Fucking_first_app/upload/' + file
             return StreamingHttpResponse(detect.detection(link, location))
             # return StreamingHttpResponse(iterator())
-        elif (request.POST['ins'] == 'complete'):
-            os.system("python manage.py runserver")
-            print("Restarting...")
-            exit()
     else:  
         video = VideoForm()  
         analyse = AnalyseConfirm()
-        complete = AnalyseComplete()
-        return render(request,"index.html",{'video':video, 'analyse': analyse, 'complete': complete})  
+        return render(request,"index.html",{'video':video, 'analyse': analyse})  
 
 def iterator():
     x = 50
