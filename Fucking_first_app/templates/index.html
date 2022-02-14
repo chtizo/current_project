@@ -285,7 +285,7 @@
             <button class="awake series series-button">Awakeness</button>
             <button class="drowsy series series-button">Drowsiness</button>
             <button class="happy series series-button">Drowsiness</button>
-            <button class="sad series series-button">Drowsiness</button>
+            <button class="stressed series series-button">Drowsiness</button>
         </div>
 
         <div id="chartdiv"></div>
@@ -418,10 +418,10 @@
             // ------------------------------------------------------------------------------------
 
             var series4 = chart.series.push(new am4charts.LineSeries());
-            series4.name = "Sad";
+            series4.name = "Stressed";
             series4.stroke = am4core.color("#a818e0");
             series4.strokeWidth = 3;
-            series4.dataFields.valueY = "sad";
+            series4.dataFields.valueY = "stressed";
             series4.dataFields.valueX = "time";
             series4.smoothing = "monotoneX";
             series.push(series4)
