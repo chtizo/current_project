@@ -26,7 +26,8 @@ from Fucking_first_app.forms import VideoForm
 from Fucking_first_app.forms import AnalyseConfirm  
 import random
 from django.conf import settings
-import os
+
+
 
 def index(request):  
     global x
@@ -40,7 +41,7 @@ def index(request):
             return HttpResponse('uploaded|' + path)  
         elif (request.POST['ins'] == 'analyse'):
             
-            link = 'C:/Users/PAVILION/AppData/Local/Programs/Python/Python37/Fucking_first(2)/Fucking_first/Fucking_first_app/upload/' + file
+            link = 'C:/Users/PAVILION/AppData/Local/Programs/Python/Python37/Teaching/current_project/Fucking_first_app/upload/' + file
             return StreamingHttpResponse(detect.detection(link, location))
             # return StreamingHttpResponse(iterator())
     else:  
