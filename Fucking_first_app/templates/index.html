@@ -228,11 +228,19 @@
         }
 
         .awake.series-button {
-            background-color: blue;
+            background-color: #348ef5;
         }
 
         .drowsy.series-button {
-            background-color: red;
+            background-color: #d6390a;
+        }
+
+        .drowsy.series-button {
+            background-color: #14d414;
+        }
+
+        .drowsy.series-button {
+            background-color: #a818e0;
         }
 
     </style>
@@ -276,6 +284,8 @@
             <button class="series-all series-button">All</button>
             <button class="awake series series-button">Awakeness</button>
             <button class="drowsy series series-button">Drowsiness</button>
+            <button class="happy series series-button">Drowsiness</button>
+            <button class="sad series series-button">Drowsiness</button>
         </div>
 
         <div id="chartdiv"></div>
@@ -343,7 +353,7 @@
 
             var series1 = chart.series.push(new am4charts.LineSeries());
             series1.name = "Awake";
-            series1.stroke = am4core.color("blue");
+            series1.stroke = am4core.color("#348ef5");
             series1.strokeWidth = 3;
             series1.dataFields.valueY = "awake";
             series1.dataFields.valueX = "time";
@@ -365,7 +375,7 @@
 
             var series2 = chart.series.push(new am4charts.LineSeries());
             series2.name = "Drowsy";
-            series2.stroke = am4core.color("red");
+            series2.stroke = am4core.color("#d6390a");
             series2.strokeWidth = 3;
             series2.dataFields.valueY = "drowsy";
             series2.dataFields.valueX = "time";
@@ -379,9 +389,53 @@
             hoverbullet2.strokeOpacity = 0;
 
             bullet2.scale = 0.7;
-            hoverbullet1.scale = 4;
+            hoverbullet2.scale = 4;
 
             hoverbullet2.tooltipText = "{name}: [bold]{valueY}%[/]";
+
+            // ------------------------------------------------------------------------------------
+
+            var series3 = chart.series.push(new am4charts.LineSeries());
+            series3.name = "Happy";
+            series3.stroke = am4core.color("#14d414");
+            series3.strokeWidth = 3;
+            series3.dataFields.valueY = "happy";
+            series3.dataFields.valueX = "time";
+            series3.smoothing = "monotoneX";
+            series.push(series3)
+
+            var bullet3 = series3.bullets.push(new am4charts.CircleBullet());
+            var hoverbullet3 = series3.bullets.push(new am4charts.CircleBullet());
+
+            hoverbullet3.fillOpacity = 0;
+            hoverbullet3.strokeOpacity = 0;
+
+            bullet3.scale = 0.7;
+            hoverbullet3.scale = 4;
+
+            hoverbullet3.tooltipText = "{name}: [bold]{valueY}%[/]";
+
+            // ------------------------------------------------------------------------------------
+
+            var series4 = chart.series.push(new am4charts.LineSeries());
+            series4.name = "Sad";
+            series4.stroke = am4core.color("#a818e0");
+            series4.strokeWidth = 3;
+            series4.dataFields.valueY = "sad";
+            series4.dataFields.valueX = "time";
+            series4.smoothing = "monotoneX";
+            series.push(series4)
+
+            var bullet4 = series4.bullets.push(new am4charts.CircleBullet());
+            var hoverbullet4 = series4.bullets.push(new am4charts.CircleBullet());
+
+            hoverbullet4.fillOpacity = 0;
+            hoverbullet4.strokeOpacity = 0;
+
+            bullet4.scale = 0.7;
+            hoverbullet4.scale = 4;
+
+            hoverbullet4.tooltipText = "{name}: [bold]{valueY}%[/]";
 
             // ------------------------------------------------------------------------------------
 
@@ -411,6 +465,9 @@
 
             var scrollbarX = new am4charts.XYChartScrollbar();
             scrollbarX.series.push(series1);
+            scrollbarX.series.push(series2);
+            scrollbarX.series.push(series3);
+            scrollbarX.series.push(series4);
             chart.scrollbarX = scrollbarX;
 
             chart.scrollbarX.minHeight = 60;
@@ -585,63 +642,35 @@
                     var delta_res = '';
                     var temp_res = xhr.responseText.substr(restreamtext.length);
                     var temp_res_arr = temp_res.split('|');
-                    if (temp_res_arr.length > 1) {
-                        temp_res_arr.forEach(async line => {
-                            if (line) {
-                                delta_res = JSON.parse(line);
-                                if (first) {
-                                    upload_div.style.display = 'none';
-                                    document.querySelector('.video').querySelector('video').style.display = 'block';
-                                    document.querySelector('.video').querySelector('.video-name').style.display = 'block';
-                                    document.querySelector('.chart-buttons').style.display = 'flex';
-                                    chart = await chart_it([delta_res]);
-                                    var texts = upload_div.querySelectorAll('span');
-                                    texts[0].innerText = '';
-                                    texts[0].style.display = 'none';
-                                    progress_bar_analyse.classList.add('active');
-                                    first = false;
-                                } else {
-                                    await chart.addData(delta_res);
-                                }
-                                delta_res['time'] = parseFloat(delta_res.time);
-                                delta_res = set_emotions(delta_res);
-
-                                // progress_bar.classList.add('active');
-                                // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
-                                // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
-
-                                progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
-                                // progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
-                                console.log(delta_res);
+                    temp_res_arr.forEach(async line => {
+                        if (line) {
+                            delta_res = JSON.parse(line);
+                            if (first) {
+                                upload_div.style.display = 'none';
+                                document.querySelector('.video').querySelector('video').style.display = 'block';
+                                document.querySelector('.video').querySelector('.video-name').style.display = 'block';
+                                document.querySelector('.chart-buttons').style.display = 'flex';
+                                chart = await chart_it([delta_res]);
+                                var texts = upload_div.querySelectorAll('span');
+                                texts[0].innerText = '';
+                                texts[0].style.display = 'none';
+                                progress_bar_analyse.classList.add('active');
+                                first = false;
+                            } else {
+                                await chart.addData(delta_res);
                             }
-                        })
-                    } else {
-                        delta_res = JSON.parse(temp_res_arr[0]);
-                        if (first) {
-                            upload_div.style.display = 'none';
-                            document.querySelector('.video').querySelector('video').style.display = 'block';
-                            document.querySelector('.video').querySelector('.video-name').style.display = 'block';
-                            document.querySelector('.chart-buttons').style.display = 'flex';
-                            chart = await chart_it([delta_res]);
-                            var texts = upload_div.querySelectorAll('span');
-                            texts[0].innerText = '';
-                            texts[0].style.display = 'none';
-                            progress_bar_analyse.classList.add('active');
-                            first = false;
-                        } else {
-                            await chart.addData(delta_res);
+                            delta_res['time'] = parseFloat(delta_res.time);
+                            // delta_res = set_emotions(delta_res);
+
+                            // progress_bar.classList.add('active');
+                            // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
+                            // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
+
+                            progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
+                            // progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
+                            console.log(delta_res);
                         }
-                        delta_res['time'] = parseFloat(delta_res.time);
-                        delta_res = set_emotions(delta_res);
-
-                        // progress_bar.classList.add('active');
-                        // progress_bar.querySelector('.progress').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
-                        // progress_bar.querySelector('.progress').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
-
-                        progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
-                        // progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
-                        console.log(delta_res);
-                    }
+                    })
                     restreamtext += temp_res;
                     resstream.push(delta_res);
                 })
