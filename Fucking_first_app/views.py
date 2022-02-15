@@ -50,16 +50,25 @@ def index(request):
         return render(request,"index.html",{'video':video, 'analyse': analyse})  
 
 def iterator():
-    x = 50
+    x = 100
     y = 0
     total = x
+    fps = 30
     while (x > 0):
         y += 1
         x -= 1
-        sleep(0.05)
+        time = y/fps
+        total_time = total/fps
+        sleep(0.1)
         out = {
-            "current": y,
-            "total": total,
-            "value": random.randint(10, 30)
+            "time": time,
+            "total_time": total_time,
+            "current_frame": y,
+            "total_frames": total,
+            "awake": random.randint(0, 100),
+            "drowsy": random.randint(0, 100),
+            "happy": random.randint(0, 100),
+            "stressed": random.randint(0, 100),
+            "fps": fps
         }
         yield json.dumps(out) + '|'
