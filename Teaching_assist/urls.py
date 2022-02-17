@@ -22,10 +22,10 @@ import os
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Enter the app name in following syntax for this to work
-    path('', include("Fucking_first_app.urls")),
+    path('', include("Teaching_assist_app.urls")),
 ]
 
-urlpatterns += static('/Fucking_first_app/upload/',document_root=os.path.join(settings.BASE_DIR, 'Fucking_first_app', 'upload/'))
+urlpatterns += static('/Teaching_assist_app/upload/',document_root=os.path.join(settings.BASE_DIR, 'Teaching_assist_app', 'upload/'))
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class FuckingFirstAppConfig(AppConfig):
-    name = 'Fucking_first_app'
+class TeachingassistAppConfig(AppConfig):
+    name = 'Teaching_assist_app'

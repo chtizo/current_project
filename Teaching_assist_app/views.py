@@ -9,7 +9,7 @@
 
 file = ''
 from importlib.machinery import SourceFileLoader
-location = "./Drowsiness_detect/yolov5/"
+location = "Teaching_assist_app/Drowsiness_detect/yolov5/"
 detect = SourceFileLoader("Detect_uploaded_video",location + "Detect_uploaded_video.py").load_module()
 
 
@@ -41,7 +41,7 @@ def index(request):
             return HttpResponse('uploaded|' + path)  
         elif (request.POST['ins'] == 'analyse'):
             
-            link = './upload/' + file
+            link = 'Teaching_assist_app/upload/' + file
             return StreamingHttpResponse(detect.detection(link, location))
             # return StreamingHttpResponse(iterator())
     else:  
