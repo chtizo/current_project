@@ -243,9 +243,69 @@
             background-color: #a818e0;
         }
 
+        .score-div {
+            position: absolute;
+            top: 20%;
+            left: 83%;
+            height: 200px;
+            width: 200px;
+            font-size: 50px;
+            transform: translate(-50%, -50%);
+            justify-content: center;
+            align-items: center;
+            color: white;
+            border-radius: 50%;
+            border: 4px solid white;
+            display: none;
+        }
+
+        .score-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        hr {
+            border: none;
+            border-bottom: 4px solid white !important;
+            width: 100px;
+            margin: 5px 0;
+        }
+
+        .heading {
+            margin: 10px 0 0 0;
+            font-size: 50px;
+        }
+
+        .home {
+            padding: 5px 10px;
+            font-size: 28px;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            outline: none;
+            background-color: transparent;
+            position: absolute;
+            top: 5%;
+            left: 4%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            z-index: 99;
+        }
+
+        .home:hover {
+            border: 2px solid white;
+        }
+
+        .home:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
     </style>
 </head>
 <body>
+    <button type="button" class="home">Home</button>
+    <span class="heading">Teaching Assistant Report</span>
     <div class="upload-div">
         <i class="fas fa-cloud-upload-alt"></i>
         <br>
@@ -289,6 +349,14 @@
         </div>
 
         <div id="chartdiv"></div>
+    </div>
+
+    <div class="score-div">
+        <div class="score-text">
+            <span class="score">X</span>
+            <hr>
+            <span>10</span>
+        </div>
     </div>
 
     <script>
@@ -524,10 +592,15 @@
         var video_input = document.querySelector('#upload_form input[type=file]');
         var upload_form = document.querySelector('#upload_form');
         var analyse_form = document.querySelector('#analyse_form');
-        var complete_form = document.querySelector('#complete_form');
         var progress_bar = document.querySelector('.progress-bar');
         var progress_bar_analyse = document.querySelector('.progress-bar-analyse');
         var chart;
+        var resstream = [];
+        var total_awake = 0;
+        var total_drowsy = 0;
+        var total_happy = 0;
+        var total_stressed = 0;
+        var total_frames = 0;
 
         document.querySelector('html').style.zoom = (window.innerWidth/1920)*100 + "%";
 
@@ -624,7 +697,6 @@
 
         function upload(form, uord) {
             var xhr = new XMLHttpRequest();
-            var resstream = [];
             xhr.open('POST', "/", true);
             if (uord == 'upload') {
                 upload_div.removeEventListener('click', upload_click);
@@ -650,6 +722,7 @@
                                 document.querySelector('.video').querySelector('video').style.display = 'block';
                                 document.querySelector('.video').querySelector('.video-name').style.display = 'block';
                                 document.querySelector('.chart-buttons').style.display = 'flex';
+                                document.querySelector('.heading').style.display = 'none';
                                 chart = await chart_it([delta_res]);
                                 var texts = upload_div.querySelectorAll('span');
                                 texts[0].innerText = '';
@@ -659,6 +732,11 @@
                             } else {
                                 await chart.addData(delta_res);
                             }
+                            total_awake += parseInt(delta_res.awake);
+                            total_drowsy += parseInt(delta_res.drowsy);
+                            total_happy += parseInt(delta_res.happy);
+                            total_stressed += parseInt(delta_res.stressed);
+                            total_frames++;
                             delta_res['time'] = parseFloat(delta_res.time);
                             // delta_res = set_emotions(delta_res);
 
@@ -668,7 +746,7 @@
 
                             progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current_frame/delta_res.total_frames) * 100) + '%';
                             // progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.current/delta_res.total) * 100) + '%';
-                            console.log(delta_res);
+                            // console.log(delta_res);
                         }
                     })
                     restreamtext += temp_res;
@@ -725,7 +803,7 @@
                         // document.querySelector('#chartdiv').style.display = 'block';
                         document.querySelector('.chart-buttons').style.pointerEvents = 'all';
                         document.querySelector('.chart-buttons').style.filter = 'none';
-                        upload(complete_form, 'complete');
+                        score();
 
                         // chart_it(resstream);
                     }
@@ -733,6 +811,18 @@
             }
             var formData = new FormData(form);
             xhr.send(formData);
+        }
+
+        function score() {
+            document.querySelector('.score-div').style.display = 'flex';
+            var awake_score = total_awake/total_frames;
+            var drowsy_score = total_drowsy/total_frames;
+            var happy_score = total_happy/total_frames;
+            var stressed_score = total_stressed/total_frames;
+
+            var total_score = ((((awake_score - drowsy_score) + (happy_score - stressed_score)) + 200)/40).toFixed(1); 
+            document.querySelector('.score').innerHTML = total_score;
+            console.log(total_score);
         }
 
         document.querySelector('body').addEventListener('keyup', (e) => {
@@ -770,6 +860,10 @@
                     }
                 }
             }
+        })
+    
+        document.querySelector('.home').addEventListener('click', () => {
+            location.reload();
         })
     </script>
 </body>
